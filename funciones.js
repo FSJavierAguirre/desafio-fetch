@@ -3,12 +3,13 @@
 let pokeBoton = document.querySelector('#pokeBoton')
 pokeBoton.addEventListener('click',boton)
 
-fetch('https://pokeapi.co/api/v2/generation/2/')
-.then(response => response.json())
-.then(info =>{
-let pokemon = info.pokemon_species
-console.log(pokemon)
-})
+let obtenerPokemonApi = async(id) => {
+    let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
+    let info = await response.json()
+    let nombre = info.name
+    let nombreMayusculaInicial = nombre[0].toUpperCase() + nombre.slice(1)
+    return nombreMayusculaInicial
+}
 
 // --- Esta función constructora es para los diferentes pokemon del juego --- //
 
@@ -129,7 +130,7 @@ async function boton(){
         confirmButtonText:'¡Yo te elijo!',
         allowOutsideClick: false,
         input: 'radio',
-        inputOptions: {Cyndaquil: pokemon155.nombre, Totodile: pokemon158.nombre, Chikorita: pokemon152.nombre},
+        inputOptions: {Cyndaquil: await obtenerPokemonApi(155), Totodile: await obtenerPokemonApi(158), Chikorita: await obtenerPokemonApi(152)},
         inputValidator: (value) => {
           if (!value) {
             return '¡Necesitas elegir uno!'
