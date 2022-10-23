@@ -2,15 +2,42 @@
 
 let pokeBoton = document.querySelector('#pokeBoton')
 pokeBoton.addEventListener('click',boton)
+const datosEntrenador = ['https://i.imgur.com/dTA15Hr.gif']
+
+// -- Movimientos -- //
+const ataquesCyndaquil = [
+    {nombre: 'placaje', poder: 25, precision: 100},
+    {nombre: 'lanzallamas', poder: 50, precision: 75},
+    {nombre: 'ascuas', poder:30, precision: 70}
+]
+
+const ataquesTotodile = [
+    {nombre: 'placaje', poder: 25, precision: 100},
+    {nombre: 'rayo burbuja', poder: 30, precision: 75},
+    {nombre: 'pistola de agua', poder:50, precision: 65}
+]
+
+const ataquesChikorita = [
+    {nombre: 'placaje', poder: 25, precision: 100},
+    {nombre: 'látigo cepa', poder: 50, precision: 75},
+    {nombre: 'hojas navaja', poder:30, precision: 70}
+]
 
 let imagenes = {
-    025: 'https://i.imgur.com/ALqmzhO.gif',
-    063: 'https://i.imgur.com/Lmsat0t.gif',
-    133: 'https://i.imgur.com/pUwcrvc.gif',
-    149: 'https://i.imgur.com/ajLI4SC.gif',
     152: 'https://i.imgur.com/pm3UBbA.gif',
     155: 'https://i.imgur.com/ISBKDS9.gif',
     158: 'https://i.imgur.com/KTeT2X6.gif',
+}
+
+// --- Esta función constructora es para los diferentes pokemon del juego --- //
+
+function Pokemon(name, hp, imageUrl, ataque, velocidad, movimientos){
+    this.name=name
+    this.hp=hp
+    this.imageUrl = imageUrl
+    this.ataque=ataque
+    this.velocidad=velocidad
+    this.movimientos=movimientos
 }
 
 let obtenerPokemonApi = async(id) => {
@@ -26,66 +53,14 @@ let obtenerPokemonApi = async(id) => {
     return pokemon
 }
 
-// --- Esta función constructora es para los diferentes pokemon del juego --- //
-
-function Pokemon(name, hp, imageUrl, ataque1Valor, velocidad, tipo, debilidad, fase, ataque1){
-    this.name=name
-    this.hp=hp
-    this.imageUrl = imageUrl
-    this.ataque1Valor=ataque1Valor
-    this.velocidad=velocidad
-    // this.tipo=tipo
-    // this.debilidad=debilidad,
-    // this.fase=fase,
-    // this.ataque1=ataque1
-}
-
-// --- Esta función constructora es para los distintos tipos de contrincantes del juego --- //
-
-// function Entrenador(nombreContrincante,equipoContrincante,objetoContrincante,imageUrl){
-//     this.nombreContrincante = nombreContrincante,
-//     this.equipoContrincante = equipoContrincante,
-//     this.objetoContrincante = objetoContrincante,
-//     this.imageUrl = imageUrl
-// }
-
-// const red = new Entrenador("Red",pokemon025,undefined,'https://i.imgur.com/ELBXnic.gif')
-// const serena = new Entrenador("Serena",pokemon063,undefined,'https://i.imgur.com/6McxONW.gif')
-// const oak = new Entrenador("Oak",pokemon124,undefined,'https://i.imgur.com/WJOAs50.gif')
-// const gary = new Entrenador("Gary",pokemon133,undefined,'https://i.imgur.com/l2Dx95N.gif')
-
 async function desplegarAlertaPokemonInicial(pokemon){
     await Swal.fire({
-        text: `¡Felicidades! Ahora te acompaña ${pokemon.name}. Tiene ${pokemon.hp} puntos de salud y ${pokemon.velocidad} puntos de velocidad.`,
+        text: `¡Felicidades! Ahora que has elegido a  ${pokemon.name} como pokémon inicial, sus datos se han añadido exitosamente a tu ficha de jugador.`,
         imageUrl: pokemon.imageUrl,
         imageWidth: 400,
         imageHeight: 200,
         imageAlt: 'Custom image',
         confirmButtonText:'Continuar',
-        allowOutsideClick: false
-    })
-}
-
-async function iniciarCombatesFrenteDeBatalla(){
-    await Swal.fire({
-        title: `Has decidido ir a combatir al Frente de batalla`,
-        imageWidth: 400,
-        imageHeight: 200,
-        imageAlt: 'Custom image',
-        confirmButtonText:'¡A combatir!',
-        imageUrl: 'https://i.imgur.com/2UsAXEI.png',
-        allowOutsideClick: false
-    })
-}
-
-async function puebloPrimavera(){
-    await Swal.fire({
-        title: `Has decidido permanecer en el Pueblo Primavera`,
-        imageWidth: 400,
-        imageHeight: 300,
-        imageAlt: 'Custom image',
-        confirmButtonText:'Entendido',
-        imageUrl: 'https://i.imgur.com/bNkP0BX.jpg',
         allowOutsideClick: false
     })
 }
@@ -106,21 +81,30 @@ async function boton(){
             if (!value) {
               return 'Vamos, no seas tímido. Dime como te llamas.'
             }
-          }
+        }
     })
     const nombreEntrenador = primerAlert.value
+    datosEntrenador.push(nombreEntrenador)
 
-    await Swal.fire({
+    const segundoAlert = await Swal.fire({
         imageUrl: 'https://i.imgur.com/Ts9Uq4O.gif',
         imageWidth: 400,
         imageHeight: 200,
+        input: 'text',
         imageAlt: 'Custom image',
-        text: `Ya veo... un gusto conocerte ${nombreEntrenador}`,
-        confirmButtonText:'Continuar',
-        allowOutsideClick: false
+        text: `Ya veo... un gusto conocerte ${nombreEntrenador}. Cuéntame, ¿cuántos años tienes?`,
+        confirmButtonText:'Esa es mi edad',
+        allowOutsideClick: false,
+        inputValidator: (value) => {
+            if (!value) {
+              return 'Debes ingresar tu edad para continuar'
+            }
+        }
     })
+    const edadEntrenador = segundoAlert.value
+    datosEntrenador.push(edadEntrenador + ' años')
 
-    const segundoAlert = await Swal.fire({
+    const tercerAlert = await Swal.fire({
         title: 'Profesor Oak:',
         text: 'Para dar inicio a tu aventura, elige a tu compañero pokémon de la región:',
         imageUrl: 'https://i.imgur.com/5EiSLq4.gif',
@@ -137,48 +121,56 @@ async function boton(){
           }
         }
     })
-    const eleccionInicial = segundoAlert.value
-    console.log(segundoAlert)
+    const eleccionInicial = tercerAlert.value
 
     if(eleccionInicial === 'Cyndaquil'){
         await desplegarAlertaPokemonInicial(await obtenerPokemonApi(155))
+        let pokemonEscogido = await obtenerPokemonApi(155)
+        pokemonEscogido.movimientos = ataquesCyndaquil
+        datosEntrenador.push(pokemonEscogido)
     } else if(eleccionInicial==='Totodile'){
         await desplegarAlertaPokemonInicial(await obtenerPokemonApi(158))
+        let pokemonEscogido = await obtenerPokemonApi(158)
+        pokemonEscogido.movimientos = ataquesTotodile
+        datosEntrenador.push(pokemonEscogido)
     } else{
         await desplegarAlertaPokemonInicial(await obtenerPokemonApi(152))
+        let pokemonEscogido = await obtenerPokemonApi(152)
+        pokemonEscogido.movimientos = ataquesChikorita
+        datosEntrenador.push(pokemonEscogido)
     }
 
     await Swal.fire({
-        text: `¡Wow! Ahora que tienes a  ${eleccionInicial} como compañero Pokémon espero que sean grandes amigos y que comiencen una gran aventura juntos.`,
+        text: `¡Wow! Ese  ${eleccionInicial} que has elegido tiene muy buena pinta. Puedes consultar sus datos en el botón "Ficha de jugador". Espero que juntos puedan emprender grandes aventuras.`,
         imageUrl: 'https://i.imgur.com/Ts9Uq4O.gif',
         imageWidth: 400,
         imageHeight: 200,
         imageAlt: 'Custom image',
-        confirmButtonText:'Continuar',
+        confirmButtonText:'Finalizar',
         allowOutsideClick: false
     })
 
-    const tercerAlert = await Swal.fire({
-        text: `${nombreEntrenador}, quiero que sepas que existe un lugar llamado 'Frente de batalla'. En este lugar los entrenadores van a hacerse más fuertes con sus pokémon mientras libran combates. ¿Que te gustaría hacer?`,
-        imageUrl: 'https://i.imgur.com/Ts9Uq4O.gif',
-        imageWidth: 400,
-        imageHeight: 200,
-        imageAlt: 'Custom image',
-        confirmButtonText:'Eso decido',
-        allowOutsideClick: false,
-        input: 'radio',
-        inputOptions: {option1: 'Combatir', option2: 'Permanecer en el pueblo'},
-        inputValidator: (value) => {
-          if (!value) {
-            return 'Toma una decisión'
-          }
-        }
-    })
-    const eleccionCombate = tercerAlert.value
+    localStorage.setItem('Datos entrenador', JSON.stringify(datosEntrenador))
+    datosStringificados = localStorage.getItem('Datos entrenador')
+}
 
-    if(eleccionCombate === 'option1'){
-        await iniciarCombatesFrenteDeBatalla()
+let nuevoBoton = document.createElement('button')
+nuevoBoton.innerText = 'Ficha de jugador'
+nuevoBoton.setAttribute('id','estilosNuevoBoton')
+let divContenedor = document.getElementById('flex')
+divContenedor.append(nuevoBoton)
+nuevoBoton.addEventListener('click',botonFicha)
+// let datosParseados = JSON.parse(datosStringificados)
+
+async function botonFicha(){
+    if(localStorage.getItem('Datos entrenador')){
+        let datosParseados = JSON.parse(datosStringificados)
+        console.log(datosParseados)
     } else{
-        await puebloPrimavera()
+        await Swal.fire({
+            text: `Aún no has creado tu ficha de jugador.`,
+            icon: 'error',
+            confirmButtonText:'Volver',
+        })
     }
 }
