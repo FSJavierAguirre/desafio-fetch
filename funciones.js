@@ -65,6 +65,8 @@ async function desplegarAlertaPokemonInicial(pokemon){
     })
 }
 
+// --- Con la siguiente función se ejecuta la toma y almacenamiento de datos del jugador --- //
+
 async function boton(){
 
     const primerAlert = await Swal.fire({
@@ -160,12 +162,88 @@ nuevoBoton.setAttribute('id','estilosNuevoBoton')
 let divContenedor = document.getElementById('flex')
 divContenedor.append(nuevoBoton)
 nuevoBoton.addEventListener('click',botonFicha)
-// let datosParseados = JSON.parse(datosStringificados)
 
 async function botonFicha(){
+    location.href = "#seccionFicha";
     if(localStorage.getItem('Datos entrenador')){
-        let datosParseados = JSON.parse(datosStringificados)
-        console.log(datosParseados)
+        let datosParseados = JSON.parse(localStorage.getItem('Datos entrenador'))
+        const movimientos = datosParseados[3].movimientos 
+        console.log(movimientos)
+        let ficha = document.getElementById('seccionFicha')
+        ficha.innerHTML = `<div id="fichaDeJugador">
+            <table>
+                <tr id="imagenJugador">
+                    <td colspan="2"><img id="imagen" src="${datosParseados[0]}" alt="Personaje"></td>
+                    <td></td>
+                </tr>
+                <tr id="nombreJugador">
+                    <td><strong>Nombre:</strong></td>
+                    <td>${datosParseados[1]}</td>
+                </tr>
+                <tr id="edadJugador">
+                    <td><strong>Edad:</strong></td>
+                    <td>${datosParseados[2]}</td>
+                </tr>
+                <tr id="pokemonInicial">
+                    <td><strong>Nombre del Pokemon:</strong></td>
+                    <td>${datosParseados[3].name}</td>
+                </tr>
+                <tr id="hp">
+                    <td><strong>Puntos de salud</strong></td>
+                    <td>${datosParseados[3].hp}</td>
+                </tr>
+                <tr id="ataque">
+                    <td><strong>Puntos de ataque:</strong></td>
+                    <td>${datosParseados[3].ataque}</td>
+                </tr>
+                <tr id="velocidad">
+                    <td><strong>Puntos de velocidad:</strong></td>
+                    <td>${datosParseados[3].velocidad}</td>
+                </tr>
+                <tr id="movimientos">
+                    <td><strong>Movimientos:</strong></td>
+                </tr>
+                <tr class="caracteristicasMovimientos">
+                    <td><strong>${movimientos[0].nombre}</strong></td>
+                    <tr>
+                        <tr>
+                            <td>Poder:</td>
+                            <td>${movimientos[0].poder}</td>
+                        </tr>
+                        <tr>
+                            <td>Precisión:</td>
+                            <td>${movimientos[0].precision}</td>
+                        </tr>
+                    </tr>
+                </tr>
+                <tr class="caracteristicasMovimientos">
+                    <td><strong>${movimientos[1].nombre}</strong></td>
+                    <tr>
+                        <tr>
+                            <td>Poder:</td>
+                            <td>${movimientos[1].poder}</td>
+                        </tr>
+                        <tr>
+                            <td>Precisión:</td>
+                            <td>${movimientos[1].precision}</td>
+                        </tr>
+                    </tr>
+                </tr>
+                <tr class="caracteristicasMovimientos">
+                    <td><strong>${movimientos[2].nombre}</strong></td>
+                </tr>
+                <tr>
+                    <tr>
+                        <td>Poder:</td>
+                        <td>${movimientos[2].poder}</td>
+                    </tr>
+                    <tr>
+                        <td>Precisión:</td>
+                        <td>${movimientos[0].precision}</td>
+                    </tr>
+                </tr>
+        </table>
+    </div>`
     } else{
         await Swal.fire({
             text: `Aún no has creado tu ficha de jugador.`,
